@@ -1,9 +1,10 @@
-mport matplotlib
+import matplotlib
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import sys
-import Basemap
+from mpl_toolkits.basemap import Basemap
 import netCDF4
+import numpy as np
 
 
 class Ex01(object):
@@ -28,15 +29,19 @@ class Ex01(object):
 # make up some data on a regular lat/lon grid.
     fn = path.split('/')[-1]
     vn = fn.split( '_' )[0]
-    data = nc.variables[vn][index,:,:]
-    nlats = data.shape[0]; nlons = data.shape[1]; delta = 2.*np.pi/(nlons-1)
+    nc = netCDF4.Dataset( path )
+    data = nc.variables[vn]
+    datai = data[index,:,:]
+    nlats = datai.shape[0]; nlons = datai.shape[1];
+    delta = 2.*np.pi/(nlons-1)
     lats = (0.5*np.pi-delta*np.indices((nlats,nlons))[0,:,:])
     lons = (delta*np.indices((nlats,nlons))[1,:,:])
 # compute native map projection coordinates of lat/lon grid.
     x, y = map(lons*180./np.pi, lats*180./np.pi)
 # contour data over the map.
-    cs = map.contour(x,y,data,15,linewidths=1.5)
-    plt.title(data.long_name)
+    cs = map.contour(x,y,datai,15,linewidths=1.5)
+    title = '[%s: %s] %s' % (vn,data.getncattr('units'), data.getncattr('long_name'))
+    plt.title(title)
     plt.savefig( '%s.png' % vn )
 
 
