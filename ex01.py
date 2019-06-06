@@ -46,5 +46,10 @@ class Ex01(object):
 
 
 if __name__ == "__main__":
-  ex01 = Ex01()
-  ex01( sys.argv[1] )
+  if sys.argv[1] == '-h':
+    print ("""Usage: python ex01.py <file>
+ e.g. python ex01.py /badc/cmip6/data/CMIP6/CMIP/MOHC/UKESM1-0-LL/historical/r1i1p1f2/Amon/tas/gn/latest/tas_Amon_UKESM1-0-LL_historical_r1i1p1f2_gn_195001-201412.nc
+""" )
+  else:
+    ex01 = Ex01()
+    ex01( sys.argv[1] )
